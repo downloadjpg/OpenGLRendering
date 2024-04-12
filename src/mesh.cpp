@@ -18,28 +18,6 @@ void Mesh::draw(Shader &shader) {
 }
 
 
-void Mesh::draw_with_CPU_transform(Shader &shader, ModelViewMatrix &modelViewMatrix) {
-    
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-    std::vector<Vertex> transformedVertices;;
-    // apply transformation to every vertex in the mesh
-    for (unsigned int i = 0; i < vertices.size(); i++) {
-        transformedVertices.push_back(vertices[i]);
-        transformedVertices[i].Position = glm::vec3(modelViewMatrix.totalMatrix * glm::vec4(vertices[i].Position, 1.0f));
-        // Commented this out, as I think normals should still be in local coordinates.
-        //transformedVertices[i].Normal = glm::normalize(glm::vec3(
-        //        modelViewMatrix.totalMatrix * glm::vec4(vertices[i].Normal, 0.0f)));
-
-    }
-    // Write the vertices to the VBO
-    glBufferData(GL_ARRAY_BUFFER, transformedVertices.size() * sizeof(Vertex), &transformedVertices[0], GL_STATIC_DRAW);
-    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
-}
-
-
 // reads the vertices and indices from the vectors and sets up the VAO, VBO, and EBO
 void Mesh::setupMesh() {
     // Generate all our guys
