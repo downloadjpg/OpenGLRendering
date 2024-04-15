@@ -57,7 +57,7 @@ int main()
     // ------------------------------------------------------------------
 
     // Loading shaders from file.
-    Shader gpu_Transforms("src/shaders/matrixUniformVertex.vs", "src/shaders/basicFragment.fs");
+    Shader gpu_Transforms("src/shaders/basicWithGPUTransform.vs", "src/shaders/visualizeDepthBuffer.fs");
     // Load mesh from file
     Mesh myMesh = loadObjFile("data/flowers.obj");
     // ------------------------------------------------------------------
