@@ -57,9 +57,9 @@ int main()
     // ------------------------------------------------------------------
 
     // Loading shaders from file.
-    Shader gpu_Transforms("src/shaders/basicWithGPUTransform.vs", "src/shaders/visualizeDepthBuffer.fs");
+    Shader gpu_Transforms("src/shaders/gouraudShading.vs", "src/shaders/basic.fs");
     // Load mesh from file
-    Mesh myMesh = loadObjFile("data/flowers.obj");
+    Mesh myMesh = loadObjFile("data/cube.obj");
     // ------------------------------------------------------------------
 
 
@@ -117,10 +117,10 @@ void processInput(GLFWwindow *window, ModelViewMatrix &modelViewMatrix)
 
     // Scaling
     if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS) {
-        modelViewMatrix.scale(1.1f);
+        modelViewMatrix.scale(1.05f);
     }
     if (glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS) {
-        modelViewMatrix.scale(0.9f);
+        modelViewMatrix.scale(0.95f);
     }
 
     // Rotation
@@ -143,10 +143,10 @@ void processInput(GLFWwindow *window, ModelViewMatrix &modelViewMatrix)
 
     // Translation
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-        modelViewMatrix.translate(glm::vec3(0.0f, 0.0f, 0.1f));
+        modelViewMatrix.translate(glm::vec3(0.0f, 0.0f, -0.1f));
     }
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-        modelViewMatrix.translate(glm::vec3(0.0f, 0.0f, -0.1f));
+        modelViewMatrix.translate(glm::vec3(0.0f, 0.0f, 0.1f));
     }
 
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {

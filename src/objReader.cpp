@@ -67,7 +67,8 @@ Mesh loadObjFile(const char* filename) {
         vertex.Position = positions.at(i);
         if (i < normals.size())
             vertex.Normal = normals.at(i);
-        vertex.Color = glm::vec3(1.0f, 1.0f, 1.0f);
+        glm::vec3 albedo = glm::vec3(1.0f, 1.0f, 1.0f);
+        vertex.Color = albedo; // i'm not implementing texture mapping lol
         vertices.push_back(vertex);
     }
     // for (unsigned int i = 0; i < vertices.size(); i++) {
