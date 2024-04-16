@@ -59,7 +59,7 @@ Mesh loadObjFile(const char* filename) {
                 addFaceToIndices(faceIndices, indices);
         }
     }
-    std::cout << "Loaded " << filename << " with " << positions.size() << " vertices, " << normals.size() << "normals and " << indices.size() << " faces." << std::endl;
+    std::cout << "Loaded " << filename << " with " << positions.size() << " vertices, " << normals.size() << " normals and " << indices.size() << " faces." << std::endl;
 
     // Now that we'eve accumulated our data, put them into Vertex structs and add them to the vertices vector.
     for (unsigned int i = 0; i < positions.size(); i++) {
@@ -78,7 +78,7 @@ Mesh loadObjFile(const char* filename) {
     //     std::cout << "\tNormal: " << vertices[i].Normal.x << " " << vertices[i].Normal.y << " " << vertices[i].Normal.z << std::endl;
     // }
 
-    std::cout << "Loaded " << filename << " with " << vertices.size() << " vertices and " << indices.size() << " indices." << std::endl;
+    //std::cout << "Loaded " << filename << " with " << vertices.size() << " vertices and " << indices.size() << " indices." << std::endl;
     return Mesh(vertices, indices);
 }
 
