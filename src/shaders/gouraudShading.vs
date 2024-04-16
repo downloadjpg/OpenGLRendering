@@ -1,7 +1,7 @@
 #version 330 core
 layout (location = 0) in vec3 aPos; // position and normal in local coords
-layout (location = 1) in vec3 aNormal; // vertex normal 
-layout (location = 2) in vec3 aColor; 
+layout (location = 1) in vec3 aNormal; // vertex normal in local coords
+layout (location = 2) in vec3 aColor;  // albedo
 
 uniform mat4 model; 
 uniform mat4 view; 
@@ -28,8 +28,8 @@ vec3 calculateLighting(vec3 position, vec3 normal, vec3 albedo) {
     vec3 reflectDir = reflect(-lightDir, normal);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0f), 32);
     vec3 specular = specularStrength * spec * lightColor;
-    return normal;
-    return albedo * (lightDir);// + specular + vec3(0.05f)) / 2;
+
+    return albedo * (spec + diffuse);
 }
 
 void main() {
@@ -37,6 +37,6 @@ void main() {
     vec3 worldPos = vec3(model * vec4(aPos, 1.0));
     vec3 worldNormal = normalize(vec3(model * vec4(aNormal, 0.0)));
     vertexColor = calculateLighting(worldPos, worldNormal, aColor);
-    vertexColor = aColor;
+    //vertexColor = (worldNormal + vec3(1.0f)) * 0.5f;
     gl_Position = projection * view * model * vec4(aPos, 1.0);
 }

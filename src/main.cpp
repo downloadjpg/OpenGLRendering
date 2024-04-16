@@ -59,7 +59,7 @@ int main()
     // Loading shaders from file.
     Shader gpu_Transforms("src/shaders/gouraudShading.vs", "src/shaders/basic.fs");
     // Load mesh from file
-    Mesh myMesh = loadObjFile("data/icosphere.obj");
+    Mesh myMesh = loadObjFile("data/venus.obj");
     // ------------------------------------------------------------------
 
 
