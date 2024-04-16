@@ -59,7 +59,7 @@ int main()
     // Loading shaders from file.
     Shader gpu_Transforms("src/shaders/gouraudShading.vs", "src/shaders/basic.fs");
     // Load mesh from file
-    Mesh myMesh = loadObjFile("data/cube.obj");
+    Mesh myMesh = loadObjFile("data/venus.obj");
     // ------------------------------------------------------------------
 
 
@@ -154,6 +154,10 @@ void processInput(GLFWwindow *window, ModelViewMatrix &modelViewMatrix)
     }
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
         modelViewMatrix.translate(glm::vec3(0.1f, 0.0f, 0.0f));
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS) {
+        modelViewMatrix = ModelViewMatrix();
     }
 }
 
