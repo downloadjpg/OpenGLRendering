@@ -59,7 +59,7 @@ int main()
     // Loading shaders from file.
     Shader gpu_Transforms("src/shaders/gouraudShading.vs", "src/shaders/basic.fs");
     // Load mesh from file
-    Mesh myMesh = loadObjFile("data/venus.obj");
+    Mesh myMesh = loadObjFile("data/icosphere.obj");
     // ------------------------------------------------------------------
 
 
@@ -83,9 +83,7 @@ int main()
         
         // Okay I read that you call use() on the shader object BEFORE setting uniforms.
 
-        // TODO: create one Model Viewmatrix, then EITHER:
         Shader& chosenShader = gpu_Transforms; 
-        chosenShader = gpu_Transforms;
         chosenShader.use();
         chosenShader.setMat4("model", modelViewMatrix.modelMatrix);
         chosenShader.setMat4("view", modelViewMatrix.viewMatrix);
