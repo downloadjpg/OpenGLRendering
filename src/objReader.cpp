@@ -1,22 +1,22 @@
 #include "mesh.h"
+#include <algorithm> // for std::count
 
-void addFaceToIndices(std::vector<unsigned int> face, std::vector<unsigned int> &indices);
+void addFaceToTriangles(std::vector<Vertex> face, std::vector<Vertex> &triangles);
+Vertex parseVertexString(std::string vertexStr, std::vector<glm::vec3> &positions, std::vector<glm::vec3> &normals);
 
 Mesh loadObjFile(const char* filename) {
-    std::vector<Vertex> vertices;
-    std::vector<unsigned int> indices;
+    std::vector<Vertex> triangles = {}; // vertexes in pairs of 3
 
     std::ifstream file(filename);
     if (!file.is_open()) {
         std::cout << "Could not open file " << filename << std::endl;
-        return Mesh(vertices, indices);
+        return Mesh(triangles);
     }
     std::vector<glm::vec3> positions;
-    // std::vector<glm::vec2> textures;
     std::vector<glm::vec3> normals;
+
     for (std::string line; getline(file, line);) { 
         std::string lineTemp = line;  
-
         // Reading vertex (position)
         if(line != "" && line.at(0) == 'v' && line.at(1) == ' ') {
             glm::vec3 position;
@@ -35,69 +35,70 @@ Mesh loadObjFile(const char* filename) {
         }
 
         // Reading faces (indices)
-        //TODO: READ NORMAL INDICES U DUMBY
-        else if(line != "" && line.at(0) == 'f' && line.at(1) == ' ') {
-            std::vector<unsigned int> faceIndices;
-            unsigned int iter = 2; // 'f ' is 2 characters long
+        // This will essentially construct the VBO, since I'm ditching the EBO stuff.
+        // Each vertex in the face will be parsed and constructed from the positions[] and normals[] arrays.
+        // After this, the face will be triangulated, and the triangle will be appended to vertices.
+        if(line != "" && line.at(0) == 'f' && line.at(1) == ' ') {
+            std::vector<Vertex> face;
+            unsigned int iter = 2; // 'f ' is 2 characters long, so we begin here.
             while (iter < lineTemp.size()) {
-                std::string vertex = lineTemp.substr(iter, lineTemp.find(' ', iter) - iter);
-                // std::cout << "Vertex: " << vertex << std::endl;
-                // We need to account for the varying formats of the faces
-                // 1. 1/1/1 2/2/2 3/3/3
-                // 2. 1//1 2//2 2//2
-                // 3. 1 2 3
-                // But for now, let's just grab the first number and ignore the rest.
-                std::string value = vertex.substr(0, vertex.find('/'));
-                // std::cout << "Value: " << value << std::endl;
-                if (value != "")
-                    faceIndices.push_back(std::stoi(value) - 1); // OBJ indices are 1-based, so we need to subtract 1.
-                iter += vertex.size() + 1;
+                // Get the next vertex in the line.
+                std::string vertexStr = lineTemp.substr(iter, lineTemp.find(' ', iter) - iter);
+                Vertex vertex = parseVertexString(vertexStr, positions, normals);
+                face.push_back(vertex);
+                iter += vertexStr.size() + 1;
             }
-                // std::cout << "Face index: ";
-                // for (unsigned int i = 0; i < faceIndices.size(); i++) {
-                //     std::cout << faceIndices[i] << " ";
-                // }
-                addFaceToIndices(faceIndices, indices);
+                addFaceToTriangles(face, triangles);
         }
     }
-    std::cout << "Loaded " << filename << " with " << positions.size() << " vertices, " << normals.size() << " normals and " << indices.size() << " faces." << std::endl;
+    // std::cout << "Loaded " << filename << " with " << positions.size() << " vertices, " << normals.size() << " normals and " << indices.size() << " faces." << std::endl;
 
-    // Now that we'eve accumulated our data, put them into Vertex structs and add them to the vertices vector.
-    for (unsigned int i = 0; i < positions.size(); i++) {
-        Vertex vertex;
-        vertex.Position = positions.at(i);
-        if (i < normals.size())
-            vertex.Normal = normals.at(i);
-        glm::vec3 albedo = glm::vec3(1.0f, 1.0f, 1.0f);
-        vertex.Color = albedo; // i'm not implementing texture mapping lol
-        vertices.push_back(vertex);
-    }
-    // for (unsigned int i = 0; i < vertices.size(); i++) {
-    //     std::cout << "Vertex " << i << std::endl;
-    //     std::cout << "\tPosition: " << vertices[i].Position.x << " " << vertices[i].Position.y << " " << vertices[i].Position.z << std::endl;
-    //     std::cout << "\tColor: " << vertices[i].Color.x << " " << vertices[i].Color.y << " " << vertices[i].Color.z << std::endl;
-    //     std::cout << "\tNormal: " << vertices[i].Normal.x << " " << vertices[i].Normal.y << " " << vertices[i].Normal.z << std::endl;
-    // }
+ 
 
     //std::cout << "Loaded " << filename << " with " << vertices.size() << " vertices and " << indices.size() << " indices." << std::endl;
-    return Mesh(vertices, indices);
+    std::cout << "Loaded!";
+    return Mesh(triangles);
 }
 
-void addFaceToIndices(std::vector<unsigned int> face, std::vector<unsigned int> &indices) {
+Vertex parseVertexString(std::string str, std::vector<glm::vec3> &positions, std::vector<glm::vec3> &normals) {
+    // TODO: implement texture coords, shouldn't be too hard.
+    // This string can come in the following formats:
+    // v/vt/vn
+    // v/vt
+    // v//vn
+    // v
+    Vertex vertex;
+    unsigned int numSlashes = std::count(str.begin(), str.end(), '/');
+    unsigned int normalIndex = 0;
+    unsigned int positionIndex = 0;
+    if (numSlashes == 0)
+        positionIndex = std::stoi(str);
+    else
+        positionIndex = std::stoi(str.substr(0, str.find('/')));
+    if (numSlashes == 2)
+        normalIndex = std::stoi(str.substr(str.find_last_of('/') + 1));
+
+    vertex.position = positions.at(positionIndex - 1); // obj is 1 based!
+    vertex.normal = glm::normalize(normals.at(normalIndex - 1));
+    vertex.color = glm::vec3(1.0f, 1.0f, 1.0f);
+    return vertex;
+}
+
+void addFaceToTriangles(std::vector<Vertex> face, std::vector<Vertex> &triangles) {
     // If the face has 3 vertices:
     if (face.size() == 3) {
-        indices.push_back(face[0]);
-        indices.push_back(face[1]);
-        indices.push_back(face[2]);
+        triangles.push_back(face[0]);
+        triangles.push_back(face[1]);
+        triangles.push_back(face[2]);
     }
     // If the face has 4 vertices, it's easy to split into two triangles.
     else if (face.size() == 4) {
-        indices.push_back(face[0]);
-        indices.push_back(face[1]);
-        indices.push_back(face[2]);
-        indices.push_back(face[0]);
-        indices.push_back(face[2]);
-        indices.push_back(face[3]);
+        triangles.push_back(face[0]);
+        triangles.push_back(face[1]);
+        triangles.push_back(face[2]);
+        triangles.push_back(face[0]);
+        triangles.push_back(face[2]);
+        triangles.push_back(face[3]);
     }   
     // Oops! You lose.
     else std::cout << "Face has " << face.size() << " vertices, not supported." << std::endl;

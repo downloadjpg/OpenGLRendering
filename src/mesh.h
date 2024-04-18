@@ -7,20 +7,17 @@
 class ModelViewMatrix;
 
 struct Vertex {
-    glm::vec3 Position;
-    glm::vec3 Normal;
-    glm::vec3 Color;
+    glm::vec3 position = glm::vec3(0,0,0);
+    glm::vec3 normal = glm::vec3(0,0,0);
+    glm::vec3 color = glm::vec3(0,0,0);
 };
 
 class Mesh {
 public:
-    std::vector<Vertex> vertices;
-    std::vector<unsigned int> indices;
-    //vector<Texture> textures;
-    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
+    std::vector<Vertex> triangles; // vector of vertex triplets
+    Mesh(std::vector<Vertex> triangles);
     void draw(Shader &shader);
-    void draw_with_CPU_transform(Shader &shader, ModelViewMatrix &modelViewMatrix);
-    unsigned int VAO, VBO, EBO;
+    unsigned int VAO, VBO;
 
 private:
     void setupMesh();
