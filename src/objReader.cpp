@@ -35,6 +35,7 @@ Mesh loadObjFile(const char* filename) {
         }
 
         // Reading faces (indices)
+        //TODO: READ NORMAL INDICES U DUMBY
         else if(line != "" && line.at(0) == 'f' && line.at(1) == ' ') {
             std::vector<unsigned int> faceIndices;
             unsigned int iter = 2; // 'f ' is 2 characters long
