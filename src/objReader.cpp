@@ -80,7 +80,8 @@ Vertex parseVertexString(std::string str, std::vector<glm::vec3> &positions, std
 
     vertex.position = positions.at(positionIndex - 1); // obj is 1 based!
     vertex.normal = glm::normalize(normals.at(normalIndex - 1));
-    vertex.color = glm::vec3(1.0f, 1.0f, 1.0f);
+    //vertex.color = glm::vec3(1.0f, 1.0f, 1.0f);
+    vertex.color = vertex.normal;
     return vertex;
 }
 

@@ -59,7 +59,7 @@ int main()
     // Loading shaders from file.
     Shader gpu_Transforms("src/shaders/gouraudShading.vs", "src/shaders/basic.fs");
     // Load mesh from file
-    Mesh myMesh = loadObjFile("data/smoothIcosphere.obj");
+    Mesh myMesh = loadObjFile("data/icosphere.obj");
     // ------------------------------------------------------------------
 
 
@@ -86,7 +86,7 @@ int main()
         Shader& chosenShader = gpu_Transforms; 
         chosenShader.use();
         chosenShader.setMat4("model", modelViewMatrix.modelMatrix);
-        chosenShader.setMat4("modelInverseTranspose", transpose(inverse(modelViewMatrix.modelMatrix)));
+        chosenShader.setMat4("modelInverseTranspose", inverse(transpose(modelViewMatrix.modelMatrix)));
         chosenShader.setMat4("view", modelViewMatrix.viewMatrix);
         chosenShader.setMat4("projection", projectionMatrix);
         chosenShader.setVec3("cameraPos", glm::vec3(0.0f, 0.0f, 30.0f));
