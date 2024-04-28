@@ -71,11 +71,11 @@ int main()
 
 
     // uncomment this call to draw in wireframe polygons.
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    float fov = glm::radians(90.0f);
-    float near = 0.1f;
-    float far = 100.0f;
-    float aspectRatio = float(SCR_WIDTH) / float(SCR_HEIGHT);
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    const float fov = glm::radians(90.0f);
+    const float near = 0.1f;
+    const float far = 100.0f;
+    const float aspectRatio = float(SCR_WIDTH) / float(SCR_HEIGHT);
 
     glm::mat4 projectionMatrix = glm::perspective(fov, aspectRatio, near, far);
     ModelViewMatrix modelViewMatrix;
@@ -168,6 +168,17 @@ void processInput(GLFWwindow *window, ModelViewMatrix &modelViewMatrix)
 
     if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS) {
         modelViewMatrix = ModelViewMatrix();
+    }
+
+
+    // Save current modelViewMatrix
+    if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) {
+        modelViewMatrix.save("savedTranslation.bin");
+    }
+
+    // Load saved modelViewMatrix
+    if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
+        modelViewMatrix.load("savedTranslation.bin");
     }
 }
 

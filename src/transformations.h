@@ -1,6 +1,8 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
+#include <string>
 class Mesh;
+
 
 class ModelViewMatrix {
 public:
@@ -15,4 +17,7 @@ public:
         void rotate(float angle, glm::vec3 axis);
         void scale(float multiplier);
         void translate(glm::vec3 translation);
+
+        void save(std::string path); // Save current modelViewMatrix to file
+        void load(std::string path); // Load modelViewMatrix from file
 };
