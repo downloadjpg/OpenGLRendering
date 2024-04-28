@@ -57,11 +57,13 @@ int main()
     // ------------------------------------------------------------------
 
     // Loading shaders from file.
-    Shader gouraud("src/shaders/gouraudShading.vs", "src/shaders/basic.fs");
-    Shader phong("src/shaders/phongShading.vs", "src/shaders/phongShading.fs");
-    Shader flat("src/shaders/flatShading.vs", "src/shaders/flatShading.fs");
-
-    Shader& chosenShader = flat;
+    Shader gouraud("src/shaders/gouraud.vs", "src/shaders/basic.fs");
+    Shader phong("src/shaders/phong.vs", "src/shaders/phong.fs");
+    Shader flat("src/shaders/flat.vs", "src/shaders/flat.fs");
+    Shader visualizeDepth = Shader("src/shaders/basicWithGPUTransform.vs", "src/shaders/visualizeDepth.fs");
+    Shader visualizeDepthUnscaled = Shader("src/shaders/basicWithGPUTransform.vs", "src/shaders/visualizeDepthUnscaled.fs");
+    
+    Shader& chosenShader = gouraud;
 
     
 
