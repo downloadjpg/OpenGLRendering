@@ -11,12 +11,10 @@ uniform mat4 projection;
 //uniform vec3 triangleNormal; // normal of the triangle the model is on
 uniform vec3 cameraPosition;
 
-out vec3 vertexColor; // specify a color output to the fragment shader
+flat out vec3 vertexColor; // specify a color output to the fragment shader
 
 
-vec3 calculateLighting(vec3 position, vec3 normal, vec3 albedo) {
-    // calculates the lighting of a specific vertex. this is then interpolated across different fragments
-    
+vec3 calculateLighting(vec3 position, vec3 normal, vec3 albedo) {    
     vec3 lightPos = vec3(4.0f, 3.0f, 1.0f);
     vec3 lightColor = vec3(1.0f, 0.0f, 0.5f) * 0.9f; // soft purple lighting :D
     vec3 lightDir = normalize(lightPos - position);

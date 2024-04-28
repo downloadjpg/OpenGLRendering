@@ -57,15 +57,27 @@ int main()
     // ------------------------------------------------------------------
 
     // Loading shaders from file.
-    Shader gpu_Transforms("src/shaders/gouraudShading.vs", "src/shaders/basic.fs");
+    Shader gouraud("src/shaders/gouraudShading.vs", "src/shaders/basic.fs");
+    Shader phong("src/shaders/phongShading.vs", "src/shaders/phongShading.fs");
+    Shader flat("src/shaders/flatShading.vs", "src/shaders/flatShading.fs");
+
+    Shader& chosenShader = flat;
+
+    
+
     // Load mesh from file
-    Mesh myMesh = loadObjFile("data/icosphere.obj");
+    Mesh myMesh = loadObjFile("data/venus.obj");
     // ------------------------------------------------------------------
 
 
     // uncomment this call to draw in wireframe polygons.
-    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    glm::mat4 projectionMatrix = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    float fov = glm::radians(90.0f);
+    float near = 0.1f;
+    float far = 100.0f;
+    float aspectRatio = float(SCR_WIDTH) / float(SCR_HEIGHT);
+
+    glm::mat4 projectionMatrix = glm::perspective(fov, aspectRatio, near, far);
     ModelViewMatrix modelViewMatrix;
 
     // render loop
@@ -81,9 +93,7 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // when the heck did the depth buffer get here? what's with the | operator?
         
-        // Okay I read that you call use() on the shader object BEFORE setting uniforms.
-
-        Shader& chosenShader = gpu_Transforms; 
+        // Okay I read that you call use() on the shader object BEFORE setting uniforms. 
         chosenShader.use();
         chosenShader.setMat4("model", modelViewMatrix.modelMatrix);
         chosenShader.setMat4("modelInverseTranspose", inverse(transpose(modelViewMatrix.modelMatrix)));
