@@ -58,17 +58,18 @@ int main()
 
     // Loading shaders from file.
     Shader gouraud("src/shaders/gouraud.vs", "src/shaders/basic.fs");
+    Shader gouraudWithNormals("src/shaders/visualizeNormals.vs", "src/shaders/basic.fs");
     Shader phong("src/shaders/phong.vs", "src/shaders/phong.fs");
     Shader flat("src/shaders/flat.vs", "src/shaders/flat.fs");
     Shader visualizeDepth = Shader("src/shaders/basicWithGPUTransform.vs", "src/shaders/visualizeDepth.fs");
     Shader visualizeDepthUnscaled = Shader("src/shaders/basicWithGPUTransform.vs", "src/shaders/visualizeDepthUnscaled.fs");
     
-    Shader& chosenShader = gouraud;
+    Shader& chosenShader = visualizeDepthUnscaled;
 
     
 
     // Load mesh from file
-    Mesh myMesh = loadObjFile("data/venus.obj");
+    Mesh myMesh = loadObjFile("data/galleon.obj");
     // ------------------------------------------------------------------
 
 
